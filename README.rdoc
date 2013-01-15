@@ -1,0 +1,5 @@
+== News list
+
+This is a realization of news list.
+
+P.S. https://www.coursera.org/course/proglang
