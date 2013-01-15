@@ -1,0 +1,36 @@
+<h1>Новостная лента</h1>
+
+<table>
+  <% @posts.each do |post| %>
+      <tr>
+        <div class="post-headers">
+          <td>Название новости</td>
+        </div>
+        <div class="post-content">
+          <td><%= post.title %></td>
+        </div>
+      </tr>
+      <tr>
+        <div class="post-headers">
+          <td>Содержание новости</td>
+        </div>
+        <div class="post-content">
+          <td><%= post.content %></td>
+        </div>
+      </tr>
+      <tr>
+        <td>
+          <%= link_to 'Просмотреть', post %><br />
+        </td>
+        <td>
+          <%= link_to 'Редактировать', edit_post_path(post) %>
+        </td>
+        <td>
+          <%= link_to 'Удалить', post, method: :delete,
+                                          data: { confirm: 'Вы уверены?' } %>
+        </td>
+      </tr>
+      <br />
+    </div>
+    <% end %>
+</table>
