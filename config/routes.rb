@@ -1,4 +1,8 @@
 News::Application.routes.draw do
+  devise_for :users do
+     post '/users/sign_in' => 'sessions#create', :as => :users_session
+  end
+
   resources :posts
 
 
