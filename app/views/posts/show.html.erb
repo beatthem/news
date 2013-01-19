@@ -9,7 +9,16 @@
   <b>Содержание:</b>
   <%= @post.content %>
 </p>
+<p>
+  <b>Дата создания</b>
+  <%= @post.created_at %>
+</p>
+<p>
+  <b>email автора</b>
+  <%= @post.user.email if @post.user %>
+</p>
 
-
-<%= link_to 'Редактировать', edit_post_path(@post) %> |
+<% if current_user && current_user.id == @post.user_id %>
+  <%= link_to 'Редактировать', edit_post_path(@post) %> |
+<% end %>
 <%= link_to 'Назад', posts_path %>

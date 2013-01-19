@@ -12,5 +12,14 @@
 
 <%= yield %>
 
+<%= link_to 'Все новости', posts_path %>
+<% if current_user %>
+  |
+  <%= link_to 'Просмотреть свои новости', user_posts_url() %>
+  |
+  <%= link_to 'Выйти', destroy_user_session_path(@session), method: :delete,
+    data: { confirm: 'Вы уверены?' }%>
+<% end %>
+
 </body>
 </html>

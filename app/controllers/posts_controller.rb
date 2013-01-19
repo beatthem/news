@@ -1,9 +1,10 @@
+# encoding: utf-8
 class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
-  before_filter :authenticate_user!, :only => [:show, :new, :edit, :create]
+  before_filter :authenticate_user!, :only => [:new, :edit, :create]
   def index
-    @posts = Post.all
+    @posts = Post.includes(:user).order(:created_at).all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,7 +15,7 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
-    @post = Post.find(params[:id])
+    @post = Post.includes(:user).order(:created_at).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,10 +43,10 @@ class PostsController < ApplicationController
   # POST /posts.json
   def create
     @post = Post.new(params[:post])
-
+    @post.user_id = current_user.id
     respond_to do |format|
       if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
+        format.html { redirect_to @post, notice: 'Новость создана.' }
         format.json { render json: @post, status: :created, location: @post }
       else
         format.html { render action: "new" }
@@ -60,12 +61,19 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
 
     respond_to do |format|
-      if @post.update_attributes(params[:post])
-        format.html { redirect_to @post, notice: 'Post was successfully updated.' }
+      if current_user.id != @post.user_id
+        format.html { redirect_to @post, notice: 'Нет прав' }
+        #TODO:правильная выдача json
+        format.json { render json: ["Нет прав"],
+                      status: :unprocessable_entity }
+      elsif @post.update_attributes(params[:post])
+        format.html { redirect_to @post,
+                      notice: 'Новость была обновлена.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.json { render json: @post.errors,
+                      status: :unprocessable_entity }
       end
     end
   end
