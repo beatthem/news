@@ -2,9 +2,9 @@
 class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
-  before_filter :authenticate_user!, :only => [:new, :edit, :create]
+  before_filter :authenticate_user!, :only => [:new, :edit, :create, :vote]
   def index
-    @posts = Post.includes(:user).order(:created_at).all
+    @posts = Post.includes(:user).order("rating desc, created_at desc").all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -16,7 +16,9 @@ class PostsController < ApplicationController
   # GET /posts/1.json
   def show
     @post = Post.includes(:user).order(:created_at).find(params[:id])
+    @vote = Vote.find_by_post_id_and_user_id(@post.id, current_user.id)
 
+    gon.post = @post
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @post }
@@ -50,7 +52,8 @@ class PostsController < ApplicationController
         format.json { render json: @post, status: :created, location: @post }
       else
         format.html { render action: "new" }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.json { render json: @post.errors,
+                      status: :unprocessable_entity }
       end
     end
   end
@@ -82,6 +85,11 @@ class PostsController < ApplicationController
   # DELETE /posts/1.json
   def destroy
     @post = Post.find(params[:id])
+    if current_user.id != @post.user_id
+      respond_to do |format|
+        format.html { redirect_to @post, :notice => 'Нет прав' }
+      end
+    end
     @post.destroy
 
     respond_to do |format|
@@ -89,4 +97,50 @@ class PostsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def vote
+    @success = false
+    @rating = 0
+    @vote_sign = ''
+    @vote_type = params[:vote_type]
+    ActiveRecord::Base.transaction do
+      if @vote_type == "upvote" || @vote_type == "downvote"
+        @vote_boolean = @vote_type == "upvote" ? true : false
+        @vote_sign = @vote_boolean ? '+' : '-'
+        @vote_integer = @vote_boolean ? 1 : -1
+        @post = Post.find(params[:post_id])
+        if @post
+          if !vote_exists?(params[:post_id], current_user.id)
+
+            @vote = Vote.new
+            @vote.post_id = params[:post_id]
+            @vote.user_id = current_user.id
+            @vote.positive = @vote_integer
+            @vote.save
+            @rating = @post.rating || 0
+            Post.update(@post.id,
+                        :rating => (@post.rating || 0) + @vote_integer)
+            @rating += @vote_integer
+            if @vote
+              @success = true
+            end
+          end
+        end
+      end
+    end
+    respond_to do |format|
+      format.json {render json: {
+        :success => @success, :vote_sign => @vote_sign,
+        :rating => @rating
+      }}
+    end
+  end
+  def vote_exists?(post_id, user_id)
+    @vote = Vote.find_by_post_id_and_user_id(post_id, user_id)
+    if @vote != nil
+      return true
+    end
+    return false
+  end
+
 end

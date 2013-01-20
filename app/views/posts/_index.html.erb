@@ -1,46 +1,61 @@
-<table>
-  <% @posts.each do |post| %>
-      <tr>
-        <div class="post-headers">
-          <td>Название новости</td>
-        </div>
-        <div class="post-content">
-          <td><%= post.title %></td>
-        </div>
-      </tr>
-      <tr>
-        <div class="post-headers">
-          <td>email автора</td>
-        </div>
-        <div class="post-content">
-          <td><%= post.user.email if post.user %></td>
-        </div>
-      </tr>
-<!--       <tr>
-        <div class="post-headers">
-          <td>Содержание новости</td>
-        </div>
-        <div class="post-content">
-          <td><%= post.content %></td>
-        </div>
-      </tr> -->
-      <tr>
-        <td>
-          <%= link_to 'Просмотреть', post %><br />
-        </td>
-        <% if current_user && current_user.id == post.user_id %>
+<!-- <div class="posts-table"> -->
+  <table class="posts-table">
+    <% @posts.each do |post| %>
+        <tr>
           <td>
-            <%= link_to 'Редактировать', edit_post_path(post) %>
+            <div class="post-header">
+              Название новости
+            </div>
           </td>
           <td>
-            <%= link_to 'Удалить', post, method: :delete,
-                                            data: { confirm: 'Вы уверены?' } %>
+            <div class="post-content">
+              <%= post.title %>
+            </div>
           </td>
-        <% end %>
-      </tr>
-      <br />
-    </div>
-    <% end %>
+        </tr>
+        <tr>
+          <td>
+          <div class="post-header">
+            email автора
+          </div>
+          </td>
+          <td>
+            <div class="post-content">
+              <%= post.user.email if post.user %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="post-header">
+              Рейтинг
+            </div>
+          </td>
+          <td>
+            <div class="post-content">
+              <%= post.rating || 0 %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <%= link_to 'Просмотреть', post %><br />
+          </td>
+          <% if current_user && current_user.id == post.user_id %>
+            <td>
+              <%= link_to 'Редактировать', edit_post_path(post) %>
+            </td>
+            <td>
+              <%= link_to 'Удалить', post, method: :delete,
+                                              data: { confirm: 'Вы уверены?' } %>
+            </td>
+          <% end %>
+        </tr>
+        <br />
+      </div>
+      <% end %>
 </table>
-
-<%= link_to 'Добавить новость', new_post_path %>
+<!-- </div> -->
+  <div class="links_line">
+    <%= link_to 'Добавить новость', new_post_path %>
+  </div>

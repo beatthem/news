@@ -1,11 +1,7 @@
 class SessionsController < Devise::SessionsController
   def create
-    puts '========================================'
     user_authed = warden.authenticate?(auth_options)
-    puts params
     user = User.find(:first, :conditions => [ "email = ?", params['user']['email']])
-    puts '++++++++++++++++++++++++++++++++++++++++'
-    puts self.resource
     if user_authed or user  # Пользователь найден
       self.resource = warden.authenticate!(auth_options)
       sign_in(resource_name, resource)

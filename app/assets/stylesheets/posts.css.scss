@@ -2,20 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.upvote, .downvote {
+.upvote, .downvote, .post-header, .post-content, .links-line, .votes, h1 {
     text-align: center
 }
 
 .post-header {
     color: blue;
-    text-align: center
 }
 
 .post-content {
     color: gray;
-    text-align: center;
 }
 
-.links-line {
-    text-align: center
+
+.posts-table {
+    margin-left: auto;
+    margin-right: auto;
 }

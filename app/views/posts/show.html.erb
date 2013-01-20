@@ -1,5 +1,7 @@
 <p id="notice"><%= notice %></p>
 
+<h1>Новость</h1>
+
 <div class="post-header">
   <b>Название:</b>
 </div>
@@ -25,19 +27,32 @@
 <div class="post-content">
   <%= @post.user.email if @post.user %>
 </div>
+<div class="post-header">
+  <b>Рейтинг</b>
+</div>
+<div class="post-content" id="post-rating">
+  <%= @post.rating || 0 %>
+</div>
 
-<p>
-  <div class="upvote">
-    <input type="button" id="upvote" value="+">
-    </input>
-  </div>
-  <div class="downvote">
-    <input type="button" id="downvote" value="-">
-    </input>
-  </div>
-</p>
-
-<% if current_user && current_user.id == @post.user_id %>
-  <%= link_to 'Редактировать', edit_post_path(@post) %> |
-<% end %>
-<%= link_to 'Назад', posts_path %>
+<div class="votes">
+  <% if !@vote %>
+      <p>
+        <div class="upvote">
+          <input type="button" id="upvote" value="+">
+          </input>
+        </div>
+        <div class="downvote">
+          <input type="button" id="downvote" value="-">
+          </input>
+        </div>
+      </p>
+  <% else %>
+    Вы уже проголосовали за новость (<%= @vote.positive ? '+' : '-' %>)
+  <% end %>
+</div>
+<div class="links-line">
+  <% if current_user && current_user.id == @post.user_id %>
+    <%= link_to 'Редактировать', edit_post_path(@post) %> |
+  <% end %>
+  <%= link_to 'Назад', posts_path %>
+</div>
