@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '1.9.3'
+
 gem 'rails'
 
 # Bundle edge Rails instead:
@@ -43,4 +43,4 @@ gem 'jquery-rails'
 #gem 'debugger'
 gem 'devise'
 gem 'gon'
-gem 'rspec'
+#gem 'rspec'
