@@ -4,6 +4,7 @@
   <title>News</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
+  <%= yield :javascript_includes %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -12,14 +13,23 @@
 
 <%= yield %>
 
-<%= link_to 'Все новости', posts_path %>
-<% if current_user %>
-  |
-  <%= link_to 'Просмотреть свои новости', user_posts_url() %>
-  |
-  <%= link_to 'Выйти', destroy_user_session_path(@session), method: :delete,
-    data: { confirm: 'Вы уверены?' }%>
+<div class="links-line">
+  <% if !current_user %>
+    |
+    <%= link_to 'Войти', new_user_session_path %>
+  <% end %>
+    |
+  <%= link_to 'Все новости', posts_path %>
+  <% if current_user %>
+    |
+    <%= link_to 'Просмотреть свои новости', user_posts_url() %>
+    |
+    <%= link_to 'Выйти', destroy_user_session_path(@session), method: :delete,
+        data: { confirm: 'Вы уверены?' }%>
+    |
 <% end %>
+
+</div>
 
 </body>
 </html>

@@ -1,21 +1,40 @@
 <p id="notice"><%= notice %></p>
 
-<p>
+<div class="post-header">
   <b>Название:</b>
+</div>
+<div class="post-content">
   <%= @post.title %>
-</p>
+</div>
+
+<div class="post-header">
+  <b>Содержание:</b>
+</div>
+<div class="post-content">
+  <%= @post.content %>
+</div>
+<div class="post-header">
+  <b>Дата создания</b>
+</div>
+<div class="post-content">
+  <%= @post.created_at %>
+</div>
+<div class="post-header">
+  <b>email автора</b>
+</div>
+<div class="post-content">
+  <%= @post.user.email if @post.user %>
+</div>
 
 <p>
-  <b>Содержание:</b>
-  <%= @post.content %>
-</p>
-<p>
-  <b>Дата создания</b>
-  <%= @post.created_at %>
-</p>
-<p>
-  <b>email автора</b>
-  <%= @post.user.email if @post.user %>
+  <div class="upvote">
+    <input type="button" id="upvote" value="+">
+    </input>
+  </div>
+  <div class="downvote">
+    <input type="button" id="downvote" value="-">
+    </input>
+  </div>
 </p>
 
 <% if current_user && current_user.id == @post.user_id %>
